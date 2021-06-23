@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# #keyboard emulator
+
+A small app that reply the input in one input field into another.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
