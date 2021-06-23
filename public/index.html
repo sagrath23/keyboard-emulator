@@ -26,8 +26,12 @@
     -->
     <title>React App</title>
   </head>
-  <body>
+  <html>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <input id="source" placeholder="source" onchange="pushKeyEvent" type="text">
+    <input id="target" placeholder="target" type="text">
+    <button onclick="startEmulation()">Emulate</button>
+    
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -39,5 +43,40 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      const keyEventsBuffer = [];
+      const source = document.getElementById('source');
+      const target = document.getElementById('target');
+      const startEmulation = () => {
+        console.log('Typing emulation start');
+
+        let currentKeyEvent = 0;
+        
+        const intervalId = setInterval(() => {
+          const keyEvent = keyEventsBuffer[currentKeyEvent];
+          console.log(`typing ${keyEvent.key}`);
+
+          //focus on target input
+          target.dispatchEvent(new Event('focus'));
+          target.dispatchEvent(keyEvent);
+
+          currentKeyEvent += 1;
+          if(currentKeyEvent === keyEventsBuffer.length || keyEventsBuffer.length === 0) {
+            console.log('cleaning interval');
+            clearInterval(intervalId);
+          }
+        }, 150);
+      };
+      const checkKeyEvent = (event) => {
+        console.log(event, 'key pressed in target');
+        target.value = target.value + event.key;
+      };
+      const pushKeyEvent = (event) => {
+        console.log(event, 'key event');
+        keyEventsBuffer.push(event);
+      };
+      source.addEventListener('keypress', pushKeyEvent);
+      target.addEventListener('keypress', checkKeyEvent);
+    </script>
   </body>
 </html>
